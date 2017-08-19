@@ -26,10 +26,18 @@ class App extends Component {
   }
 
   removeContact = (contact) => {
-    // s match with the state class member variable
-    this.setState((s) => ({
+    /*
+    // Another way to set a state is using objects. Prefer this option if
+    // it's not necessary access to the previous state
+    this.setState({
+      subject: 'Hello! This is a new subject'
+    })
+    */
+
+    // prevState match with the state class member variable
+    this.setState((prevState) => ({
       // contacts must match with the array declared in state
-      contacts : s.contacts.filter((c) => c.id !== contact.id)
+      contacts : prevState.contacts.filter((c) => c.id !== contact.id)
     }))
   }
 
