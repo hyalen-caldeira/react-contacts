@@ -15,6 +15,12 @@ class ListContacts extends Component {
 		})
 	}
 
+	clearQuery = () => {
+		this.setState({
+			query : ''
+		})
+	}
+
 	static propTypes = {
 		contacts : PropTypes.array.isRequired,
 		onDeleteContact : PropTypes.func.isRequired
@@ -31,11 +37,12 @@ class ListContacts extends Component {
 		} else
 			showingContacts = contacts
 
-			showingContacts.sort(sortBy('name'))
+		showingContacts.sort(sortBy('name'))
 
 		return (
 			<div className='list-contacts'>
-				{JSON.stringify(this.state)}
+				{// JSON.stringify(this.state)
+				}
 				<div className='list-contacts-top'>
 				{
 				// To recap how user input affects the ListContacts component's own state:
@@ -51,6 +58,15 @@ class ListContacts extends Component {
 						value={query}
 						onChange={(event) => this.updateQuery(event.target.value)} />
 				</div>
+
+				{
+					showingContacts.length !== contacts.length && (
+						<div className='showing-contacts'>
+							<span>Now showing {showingContacts.length} of {contacts.length} total</span>
+							<button onClick={this.clearQuery}>Show All</button>
+						</div>
+					)
+				}
 
 				<ol className='contact-list'>
 					{ // this.props.contacts.map((contact) => (
