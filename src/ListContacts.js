@@ -1,5 +1,6 @@
 // import React, {Component} from 'react';
 import React, {Component} from 'react'
+import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import escapeRegExp from 'escape-string-regexp'
 import sortBy from 'sort-by'
@@ -59,11 +60,18 @@ class ListContacts extends Component {
 						value={query}
 						onChange={(event) => updateQuery(event.target.value)} />
 
+						{/*
 						<a
 							href='#create'
 							onClick={onNavigate}
 							className='add-contact'
 						>Add Contact</a>
+						*/}
+
+						<Link
+							to='/create'
+							className='add-contact'
+						>Add Contact</Link>
 				</div>
 
 				{

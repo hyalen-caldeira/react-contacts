@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Route } from 'react-router-dom'
 import ListContacts from './ListContacts'
 import CreateContact from './CreateContact'
 import * as ContactsAPI from './utils/ContactsAPI'
@@ -30,7 +31,7 @@ class App extends Component {
   */
 
   state = {
-    screen : 'list', // list or create
+    // screen : 'list', // list or create
     contacts : []
   }
 
@@ -56,24 +57,62 @@ class App extends Component {
       contacts : prevState.contacts.filter((c) => c.id !== contact.id)
     }))
 
-    // ContactsAPI.remove(contact)
+    ContactsAPI.remove(contact)
   }
 
+  createContact(contact) {
+    ContactsAPI.create(contact).then((contact) => {
+      this.setState((state) => ({
+        contacts : state.contacts.concat([ contact ])
+      }))
+    })
+  }
+/*
+  createContact(contact) {
+    ContactsAPI.create(contact).then(contact => {
+      this.setState(state => ({
+        contacts: state.contacts.concat([ contact ])
+      }))
+    })
+  }
+*/
   render() {
     return (
-      <div>
-        {this.state.screen === 'list' && (
+      <div className='app'>
+        <Route exact path='/' render={() => (
           <ListContacts
             contacts={this.state.contacts}
-            onDeleteContact={this.removeContact}
-            onNavigate={() => {this.setState({screen : 'create'})}}/>
-        )}
+            onDeleteContact={this.removeContact}>
+          </ListContacts>
+          )}>
+        </Route>
 
-        {this.state.screen === 'create' && (
-          <CreateContact/>
-        )}
+        <Route path='/create' render={({ history }) => (
+          <CreateContact onCreateContact={(contact) => {
+            this.createContact(contact)
+            history.push('/')
+          }}/>
+        )}>
+        </Route>
+        {/*<Route path='/create' component={CreateContact}>
+        </Route>*/}
       </div>
     )
+
+    {/* return (
+    <div className='app'>
+      {this.state.screen === 'list' && (
+        <ListContacts
+          contacts={this.state.contacts}
+          onDeleteContact={this.removeContact}
+          onNavigate={() => {this.setState({screen : 'create'})}}/>
+      )}
+
+      {this.state.screen === 'create' && (
+        <CreateContact/>
+      )}
+    </div>
+    )*/}
   }
 }
 
