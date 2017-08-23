@@ -1,83 +1,170 @@
-import React, { Component } from 'react';
+// import React, {Component} from 'react';
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import escapeRegExp from 'escape-string-regexp'
 import sortBy from 'sort-by'
 
 class ListContacts extends Component {
-  static propTypes = {
-    contacts: PropTypes.array.isRequired,
-    onDeleteContact: PropTypes.func.isRequired
-  }
+	state = {
+		query : ''
+	}
 
-  state = {
-    query: ''
-  }
+	updateQuery = (value) => {
+		this.setState({
+			query : value.trim()
+		})
+	}
 
-  updateQuery = (query) => {
-    this.setState({ query: query.trim() })
-  }
+	clearQuery = () => {
+		this.setState({
+			query : ''
+		})
+	}
 
-  clearQuery = () => {
-    this.setState({ query: '' })
-  }
+	static propTypes = {
+		contacts : PropTypes.array.isRequired,
+		onDeleteContact : PropTypes.func.isRequired
+	}
 
-  render() {
-    const { contacts, onDeleteContact } = this.props
-    const { query } = this.state
+	render() {
+		const {contacts, onDeleteContact, onNavigate} = this.props
+		const {query} = this.state
+		const {updateQuery, clearQuery} = this
 
-    let showingContacts
-    if (query) {
-      const match = new RegExp(escapeRegExp(query), 'i')
-      showingContacts = contacts.filter((contact) => match.test(contact.name))
-    } else {
-      showingContacts = contacts
-    }
+		let showingContacts
+		if (query) {
+			const match = new RegExp (escapeRegExp(query), 'i')
+			showingContacts = contacts.filter((contact) => (match.test(contact.name)))
+		} else
+			showingContacts = contacts
 
-    showingContacts.sort(sortBy('name'))
+		showingContacts.sort(sortBy('name'))
 
-    return (
-      <div className='list-contacts'>
-        <div className='list-contacts-top'>
-          <input
-            className='search-contacts'
-            type='text'
-            placeholder='Search contacts'
-            value={query}
-            onChange={(event) => this.updateQuery(event.target.value)}
-          />
-          <Link
-            to='/create'
-            className='add-contact'
-          >Add Contact</Link>
-        </div>
+		return (
+			<div className='list-contacts'>
+				{// JSON.stringify(this.state)
+				}
+				<div className='list-contacts-top'>
+				{
+				// To recap how user input affects the ListContacts component's own state:
+				// The user enters text into the input field.
+				// An event listener invokes the updateQuery() function on every onChange event.
+				// updateQuery() then calls setState(), merging in the new state to update the component's internal state.
+				// Because its state has changed, the ListContacts component re-renders.
+				}
+					<input
+						className='search-contacts'
+						type='text'
+						placeholder='Search contacts ...'
+						value={query}
+						onChange={(event) => updateQuery(event.target.value)} />
 
-        {showingContacts.length !== contacts.length && (
-          <div className='showing-contacts'>
-            <span>Now showing {showingContacts.length} of {contacts.length} total</span>
-            <button onClick={this.clearQuery}>Show all</button>
-          </div>
-        )}
+						{/*
+						<a
+							href='#create'
+							onClick={onNavigate}
+							className='add-contact'
+						>Add Contact</a>
+						*/}
 
-        <ol className='contact-list'>
-          {showingContacts.map((contact) => (
-            <li key={contact.id} className='contact-list-item'>
-              <div className='contact-avatar' style={{
-                backgroundImage: `url(${contact.avatarURL})`
-              }}/>
-              <div className='contact-details'>
-                <p>{contact.name}</p>
-                <p>{contact.email}</p>
-              </div>
-              <button onClick={() => onDeleteContact(contact)} className='contact-remove'>
-                Remove
-              </button>
-            </li>
-          ))}
-        </ol>
-      </div>
-    )
-  }
+						<Link
+							to='/create'
+							className='add-contact'
+						>Add Contact</Link>
+				</div>
+
+				{
+					showingContacts.length !== contacts.length && (
+						<div className='showing-contacts'>
+							<span>Now showing {showingContacts.length} of {contacts.length} total</span>
+							<button onClick={() => clearQuery()}>Show All</button>
+						</div>
+					)
+				}
+
+				<ol className='contact-list'>
+					{ // this.props.contacts.map((contact) => (
+						showingContacts.map((contact) => (
+							<li key={contact.id} className='contact-list-item'>
+								<div className='contact-avatar' style={{backgroundImage:`url(${contact.avatarURL})`}}>
+								</div>
+								<div className='contact-details'>
+									<p>{contact.name}</p>
+									<p>{contact.email}</p>
+								</div>
+								<button onClick={() => onDeleteContact(contact)} className='contact-remove'>
+									Remove
+								</button>
+							</li>
+					))}
+				</ol>
+			</div>
+		)
+	}
 }
 
-export default ListContacts
+export default ListContacts;
+
+/*
+function ListContacts(props) {
+	return (
+		<ol className='contact-list'>
+			{props.contacts.map((contact) => (
+				<li key={contact.id} className='contact-list-item'>
+					<div className='contact-avatar' style={{backgroundImage:`url(${contact.avatarURL})`}}>
+					</div>
+					<div className='contact-details'>
+						<p>{contact.name}</p>
+						<p>{contact.email}</p>
+					</div>
+					<button onClick={() => props.onDeleteContact(contact)} className='contact-remove'>
+						Remove
+					</button>
+				</li>
+			))}
+		</ol>
+	)
+}
+
+ListContacts.propTypes = {
+	contacts : PropTypes.array.isRequired,
+	onDeleteContact : PropTypes.func.isRequired
+}
+*/
+
+/*
+// An example of ES6 function with an implicit return
+
+const Email = (props) => (
+  <div>
+    {props.text}
+  </div>
+);
+*/
+
+/*
+class ListContacts extends Component {
+	render() {
+		// console.log('Props', this.props);
+
+		return (
+			<ol className='contact-list'>
+				{this.props.contacts.map((contact) => (
+					<li key={contact.id} className='contact-list-item'>
+						<div className='contact-avatar' style={{backgroundImage:`url(${contact.avatarURL})`}}>
+						</div>
+						<div className='contact-details'>
+							<p>{contact.name}</p>
+							<p>{contact.email}</p>
+						</div>
+						<button className='contact-remove'>
+							Remove
+						</button>
+					</li>
+				))}
+			</ol>
+		)
+	}
+}
+*/
