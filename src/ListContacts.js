@@ -1,5 +1,5 @@
 // import React, {Component} from 'react';
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import escapeRegExp from 'escape-string-regexp'
@@ -104,6 +104,8 @@ class ListContacts extends Component {
 	}
 }
 
+export default ListContacts;
+
 /*
 function ListContacts(props) {
 	return (
@@ -166,6 +168,3 @@ class ListContacts extends Component {
 	}
 }
 */
-
-
-export default ListContacts;
